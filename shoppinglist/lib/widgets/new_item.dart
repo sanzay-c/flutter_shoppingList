@@ -27,14 +27,16 @@ class _NewItemState extends State<NewItem> {
   void _saveItem() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // print(_enteredName);
-      // print(_enteredQuantity);
-      // print(_selectedCategory);
+
       setState(() {
         _isSending = true;
       });
-      final url = Uri.https('flutter-prep-1ef9f-default-rtdb.firebaseio.com',
-          '/shoppingList.json');
+
+      final url = Uri.https(
+        'flutter-prep-1ef9f-default-rtdb.firebaseio.com',
+        '/shoppingList.json',
+      );
+
       final response = await http.post(
         url,
         headers: {
@@ -49,6 +51,9 @@ class _NewItemState extends State<NewItem> {
         ),
       ); // this helps to store the data in database;
 
+      // print(response.body); // yo case ma {"name" : "encodede data"} baseko cha tesaile name lai decode gareko and pop the data .
+      // print(response.statusCode); // tells us whether the request is succeeded or not  
+
       final Map<String, dynamic> resData = json.decode(response.body);
 
       // print(response.body);
@@ -60,7 +65,7 @@ class _NewItemState extends State<NewItem> {
 
       Navigator.of(context).pop(
         GroceryItem(
-          id: resData['name'],
+          id: resData['name'], // the encoded data is store in name key so, that's why 'name';
           name: _enteredName,
           quantity: _enteredQuantity,
           category: _selectedCategory,
